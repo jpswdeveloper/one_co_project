@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+venv/
+env/
+
+# Django
+*.log
+db.sqlite3
+media/
+
+# Visual Studio Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Sublime Text
+.sublime-project
+.sublime-workspace
+
+# Eclipse
+.settings/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
