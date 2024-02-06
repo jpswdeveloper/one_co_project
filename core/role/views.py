@@ -5,7 +5,7 @@ from .serializer import RoleSerializer
 from .models import Role
 
 
-class RoleCreateAPIView(APIView):
+class RoleAPIView(APIView):
 
     def get(self, request, *args, **kwargs):
         roles = Role.objects.all()
