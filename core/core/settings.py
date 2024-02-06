@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "role",
     "permission",
     "insurance",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
