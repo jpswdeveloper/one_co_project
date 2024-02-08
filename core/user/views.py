@@ -13,19 +13,34 @@ from permission.models import RolePermission
 class User_View(APIView):
     permission_classes = [IsAuthenticated]
 
+    def randomPermission(self):
+        if self.request.method == "GET":
+            return "get User"
+        if self.request.method == "POST":
+            return "Create User"
+        if self.request.method == "PUT":
+            return "Create User"
+
     def has_permission(self, user):
-        permission_name = "update emplooye"
+        # check if user has permission manage all user permission on all request
+        # manage_all = RolePermission.objects.filter(
+        #     role=user.roleId,
+        #     permission__name="manage all",
+        # ).exists()
         return {
             "valid": RolePermission.objects.filter(
                 role=user.roleId,
-                permission__name=permission_name,
+                permission__name=self.randomPermission(),
             ).exists(),
-            "permission": permission_name,
+            "permission": self.randomPermission(),
+            # "super_user": manage_all,
         }
 
     def get(self, request, userId=None):
 
         # Check user permission
+        # if not self.has_permission(request.user)["super_user"]:
+
         if not self.has_permission(request.user)["valid"]:
             return Response(
                 {
