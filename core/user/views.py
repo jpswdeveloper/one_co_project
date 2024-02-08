@@ -14,12 +14,6 @@ class User_View(APIView):
     permission_classes = [IsAuthenticated]
 
     def has_permission(self, user):
-        print("User", user.roleId)
-        user_data = User.objects.get(id=user.id)
-        print("user_data", user_data)
-
-        permission = RolePermission.objects.all()
-        print("permission", permission)
         permission_name = "update emplooye"
         return {
             "valid": RolePermission.objects.filter(
