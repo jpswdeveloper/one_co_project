@@ -4,11 +4,20 @@ from rest_framework.views import APIView
 from rest_framework import status
 from .models import User
 from .serializer import UserSerializer
+from rest_framework.permissions import IsAuthenticated
+from permission.models import RolePermission
 
 # Responsible for crud user functionality
 
 
 class User_View(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    def has_permission(self, user):
+        return RolePermission.objects.filter(
+            role=user.role, permission__codename="create_user"
+        ).exists()
+
     def get(self, request, userId=None):
         if userId:
             # If userId is provided, retrieve a specific user
