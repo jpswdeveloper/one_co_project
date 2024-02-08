@@ -19,7 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "email", "is_active", "is_staff", "password", "roleId")
+        fields = ("id", "email", "is_active", "is_staff", "password", "roleId", "phone")
 
     # def validate_email(self, value):
     def validate_email(self, value):
@@ -27,6 +27,13 @@ class UserSerializer(serializers.ModelSerializer):
         email_checker = User.objects.filter(email=value)
         if email_checker:
             raise ValidationError("Email already exists")
+        return value
+
+    def validate_phone(self, value):
+        # check if there is an exisiting email
+        phone_checker = User.objects.filter(phone=value)
+        if phone_checker:
+            raise ValidationError("Phone already exists")
         return value
 
     def validate_password(self, value):
