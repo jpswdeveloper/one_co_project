@@ -4,23 +4,22 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from .models import User
 
+from role.models import Role
+
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         write_only=True, required=True, validators=[validate_password]
     )
+    roleId = serializers.PrimaryKeyRelatedField(
+        queryset=Role.objects.all(),  # Query all Permission objects
+        required=True,
+        write_only=True,
+    )
 
     class Meta:
         model = User
-        fields = (
-            "id",
-            "profile_pic",
-            "email",
-            "is_active",
-            "is_staff",
-            "birth_date",
-            "password",
-        )
+        fields = ("id", "email", "is_active", "is_staff", "password", "roleId")
 
     # def validate_email(self, value):
     def validate_email(self, value):
@@ -43,7 +42,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.email = validated_data.get("email", instance.email)
-        instance.profile_pic = validated_data.get("profile_pic", instance.profile_pic)
+        instance.roleId = validated_data.get("roleId", instance.roleId)
+        instance.profile_image = validated_data.get("profile_pic", instance.profile_pic)
         instance.is_active = validated_data.get("is_active", instance.is_active)
         instance.is_staff = validated_data.get("is_staff", instance.is_staff)
         instance.birth_date = validated_data.get("birth_date", instance.birth_date)
