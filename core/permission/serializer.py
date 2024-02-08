@@ -9,7 +9,6 @@ class PermissionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         instance = Permission.objects.create(**validated_data)
-        RolePermission.objects.all().delete()
 
         return instance
 
