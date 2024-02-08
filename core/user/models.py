@@ -22,7 +22,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     age = models.PositiveIntegerField(null=True, blank=True)
-    phone = models.CharField(max_length=20, null=True, blank=True)
+    phone = models.CharField(max_length=20, null=True, blank=True, unique=True)
     email = models.EmailField(unique=True, null=False, blank=False)
     address = models.CharField(max_length=100, null=False, blank=False)
     password = models.CharField(max_length=100, null=True, blank=True)
