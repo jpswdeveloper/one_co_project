@@ -11,7 +11,7 @@ from permission.models import RolePermission
 
 
 class User_View(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def has_permission(self, user):
         return RolePermission.objects.filter(
