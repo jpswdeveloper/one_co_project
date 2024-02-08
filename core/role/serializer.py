@@ -1,30 +1,45 @@
 from rest_framework import serializers
 from .models import Role
-from permission.serializer import PermissionSerializer
 from permission.models import Permission, RolePermission
+from permission.serializer import PermissionSerializer
 
 
 class RoleSerializer(serializers.ModelSerializer):
-    permissions = serializers.PrimaryKeyRelatedField(
-        queryset=Permission.objects.all(), many=True
-    )
-    business_owner_id = serializers.UUIDField(required=False)
-
     class Meta:
         model = Role
         fields = "__all__"
 
+
+class RolePermissonSerializer(serializers.ModelSerializer):
+    permission = serializers.PrimaryKeyRelatedField(
+        queryset=Permission.objects.all(),  # Query all Permission objects
+        required=True,
+        write_only=True,
+    )
+    role = serializers.PrimaryKeyRelatedField(
+        queryset=Role.objects.all(),  # Query all Permission objects
+        required=True,
+        write_only=True,
+    )
+    business_owner_id = serializers.UUIDField(
+        required=False, write_only=False, allow_null=True
+    )
+
+    class Meta:
+        model = RolePermission
+        fields = [
+            "permission",
+            "role",
+            "business_owner_id",
+        ]
+
+    def validate(self, attrs):
+        permission = attrs.get("permission")
+        if not permission:
+            raise serializers.ValidationError("Permissions are required.")
+
+        # No need to check if permission exists since PrimaryKeyRelatedField ensures validity
+        return attrs
+
     def create(self, validated_data):
-        permissions_data = validated_data.pop("permissions")
-        business_owner_id = validated_data.pop("business_owner_id", None)
-        role = Role.objects.create(**validated_data)
-        role.permissions.set(permissions_data)
-
-        # Create RolePermission instances with the provided business_owner_id
-        for permission in permissions_data:
-            role_permission = RolePermission(
-                role=role, permission=permission, business_owner_id=business_owner_id
-            )
-            role_permission.save()
-
-        return role
+        return RolePermission.objects.create(**validated_data)

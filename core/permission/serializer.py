@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Permission
+from .models import Permission, RolePermission
 
 
 class PermissionSerializer(serializers.ModelSerializer):
@@ -8,7 +8,9 @@ class PermissionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
-        instance = self.Meta.objects.create(**validated_data)
+        instance = Permission.objects.create(**validated_data)
+        RolePermission.objects.all().delete()
+
         return instance
 
     def validate(self, data):

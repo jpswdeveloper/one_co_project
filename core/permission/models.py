@@ -9,12 +9,13 @@ class Permission(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100, null=False)
     description = models.CharField(max_length=100, null=False)
-    category = models.CharField(max_length=100, null=False, unique=True)
+    category = models.CharField(max_length=100, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
 class RolePermission(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     role = models.ForeignKey(Role, on_delete=models.CASCADE)
     permission = models.ForeignKey(Permission, on_delete=models.CASCADE)
     business_owner = models.ForeignKey(
