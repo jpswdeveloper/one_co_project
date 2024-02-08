@@ -14,11 +14,32 @@ class User_View(APIView):
     permission_classes = [IsAuthenticated]
 
     def has_permission(self, user):
-        return RolePermission.objects.filter(
-            role=user.role, permission__codename="create_user"
-        ).exists()
+        print("User", user.roleId)
+        user_data = User.objects.get(id=user.id)
+        print("user_data", user_data)
+
+        permission = RolePermission.objects.all()
+        print("permission", permission)
+        permission_name = "update emplooye"
+        return {
+            "valid": RolePermission.objects.filter(
+                role=user.roleId,
+                permission__name=permission_name,
+            ).exists(),
+            "permission": permission_name,
+        }
 
     def get(self, request, userId=None):
+
+        # Check user permission
+        if not self.has_permission(request.user)["valid"]:
+            return Response(
+                {
+                    "error": f"You do not have permission to {self.has_permission(request.user)['permission']} "
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
         if userId:
             # If userId is provided, retrieve a specific user
             try:
